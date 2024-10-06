@@ -4,6 +4,13 @@ const cheerio = require('cheerio');
 
 const app = express();
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');  // Allow all domains
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
 app.get('/tournaments', async (req, res) => {
     const data = await fetch("https://www.omnipong.com/t-tourney.asp?e=0", {
         headers: {
