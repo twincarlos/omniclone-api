@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 
 const app = express();
 
-app.get('/', async (req, res) => {
+app.get('/tournaments', async (req, res) => {
     const data = await fetch("https://www.omnipong.com/t-tourney.asp?e=0", {
         headers: {
             'Cache-Control': 'no-cache',
