@@ -63,7 +63,7 @@ app.get('/tournaments', async (req, res) => {
             details[detailsIndex] = { ...details[detailsIndex], city: $(element).text() }
         }
         else if (counter1 === 4) {
-            details[detailsIndex] = { ...details[detailsIndex], date: $(element).text() }
+            details[detailsIndex] = { ...details[detailsIndex], date: $(element).text().split(" - ")[0] }
         }
         else if (counter1 === 5) {
             const a = $(element).children("a").first();
