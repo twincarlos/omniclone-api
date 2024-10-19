@@ -171,7 +171,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
                         if (eventData1.length === 1) {
                             event["name"] = eventData1[0].split("Scheduled for: ")[0].trim();
                             event["maxSlots"] = null;
-                            event["date"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[0].trim();
+                            event["date"] = new Date(eventData1[0].split("Scheduled for: ")[1].trim().split("@")[0].trim()).toDateString();
                             event["time"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[1].trim();
                         } else {
                             const eventData2 = eventData1[0].trim(); // event name
@@ -182,7 +182,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
                             const eventData7 = eventData5[1].trim(); // time
                             event["name"] = eventData2;
                             event["maxSlots"] = eventData4;
-                            event["date"] = eventData6;
+                            event["date"] = new Date(eventData6).toDateString();
                             event["time"] = eventData7;
                         };
                     } else if (index > 0 && index < trs.length) {
