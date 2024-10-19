@@ -172,7 +172,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
                             event["name"] = eventData1[0].split("Scheduled for: ")[0].trim();
                             event["maxSlots"] = null;
                             event["date"] = new Date(eventData1[0].split("Scheduled for: ")[1].trim().split("@")[0].trim()).toDateString();
-                            event["time"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[1].trim();
+                            event["time"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[1].trim() + "M";
                         } else {
                             const eventData2 = eventData1[0].trim(); // event name
                             const eventData3 = eventData1[1].trim().split("Scheduled for: ");
@@ -183,7 +183,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
                             event["name"] = eventData2;
                             event["maxSlots"] = eventData4;
                             event["date"] = new Date(eventData6).toDateString();
-                            event["time"] = eventData7;
+                            event["time"] = eventData7 + "M";
                         };
                     } else if (index > 0 && index < trs.length) {
                         $e(element).children("td").each((index, element) => {
