@@ -5,6 +5,8 @@ const cheerio = require('cheerio');
 const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 
+const path = require('path');
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -291,10 +293,13 @@ app.get('/test', async (req, res) => {
 
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
+    const executablePath = isLocal ? process.env.CHROME_EXECUTABLE_PATH : path.join(__dirname, 'chromium-v130.0.0-pack.tar');
+
     const browser = await puppeteer.launch({
         args: isLocal ? puppeteer.defaultArgs() : chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://omniclonebucket.s3.amazonaws.com/chromium-v130.0.0-pack.tar'),
+        // executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://omniclonebucket.s3.amazonaws.com/chromium-v130.0.0-pack.tar'),
+        executablePath,
         headless: chromium.headless,
     });
 
