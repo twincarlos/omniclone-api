@@ -245,4 +245,39 @@ app.get('/tournament/:tournamentId', async (req, res) => {
     };
 });
 
+app.get('/usatt/playerLookup/:keyword', async (req, res) => {
+    const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    });
+    const html = await data.text();
+    const $ = cheerio.load(html);
+
+    const players = [];
+
+    $(".list-view > .row > table > tbody > tr").each((index, element) => {
+        const player = {};
+        $(element).children("td.list-column").each((index, element) => {
+            if (index === 2) {
+                const elementChild = $(element).children("a").first();
+                const split1 = $(elementChild).attr("href").split("/");
+                player["firstName"] = $(elementChild).text();
+                player["id"] = split1[split1.length - 1];
+            } else if (index === 3) {
+                player["lastName"] = $(element).children("a").first().text();
+            } else if (index === 4) {
+                player["location"] = $(element).text();
+            } else if (index === 5) {
+                player["rating"] = $(element).text();
+            };
+        });
+        players.push(player);
+    });
+
+    return res.json(players);
+});
+
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
