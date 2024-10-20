@@ -294,7 +294,7 @@ app.get('/test', async (req, res) => {
     const browser = await puppeteer.launch({
         args: isLocal ? puppeteer.defaultArgs() : chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://drive.google.com/file/d/156WcDfa0yZOkaRoR6o9hk9qrb4j-jOP4/view?usp=sharing'),
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://omniclonebucket.s3.amazonaws.com/chromium-v130.0.0-pack.tar'),
         headless: chromium.headless,
     });
 
