@@ -1,6 +1,9 @@
+require('dotenv').config({ path: '.env.local' });
 const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
+const chromium = require('@sparticuz/chromium-min');
+const puppeteer = require('puppeteer-core');
 
 const app = express();
 
@@ -281,6 +284,29 @@ app.get('/usatt/player-lookup/:keyword', async (req, res) => {
     });
 
     return res.json(players);
+});
+
+app.get('/test', async (req, res) => {
+    const siteUrl = "https://spacejelly.dev";
+
+    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+
+    const browser = await puppeteer.launch({
+        args: isLocal ? puppeteer.defaultArgs() : chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://drive.google.com/drive/folders/16yfrqa0yEXbiOF7nqMzXTIj-dCoYhTgy?usp=drive_link'),
+        headless: chromium.headless,
+    });
+
+    const page = await browser.newPage();
+    await page.goto(siteUrl);
+    const pageTitle = await page.title();
+    await browser.close();
+
+    return res.json({
+        siteUrl,
+        pageTitle
+    })
 });
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
