@@ -245,7 +245,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
     };
 });
 
-app.get('/usatt/playerLookup/:keyword', async (req, res) => {
+app.get('/usatt/player-lookup/:keyword', async (req, res) => {
     const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
         headers: {
             'Cache-Control': 'no-cache',
