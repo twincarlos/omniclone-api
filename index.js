@@ -2,10 +2,8 @@ require('dotenv').config({ path: '.env.local' });
 const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
-const chromium = require('@sparticuz/chromium-min');
+const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
-
-const path = require('path');
 
 const app = express();
 
@@ -293,13 +291,10 @@ app.get('/test', async (req, res) => {
 
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
-    const executablePath = isLocal ? process.env.CHROME_EXECUTABLE_PATH : path.join(__dirname, 'chromium');
-
     const browser = await puppeteer.launch({
         args: isLocal ? puppeteer.defaultArgs() : chromium.args,
         defaultViewport: chromium.defaultViewport,
-        // executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath('https://omniclonebucket.s3.amazonaws.com/chromium-v130.0.0-pack.tar'),
-        executablePath,
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath(),
         headless: chromium.headless,
     });
 
