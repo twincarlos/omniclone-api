@@ -293,7 +293,7 @@ app.get('/test', async (req, res) => {
 
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
-    const executablePath = isLocal ? process.env.CHROME_EXECUTABLE_PATH : path.join(__dirname, 'chromium-v130.0.0-pack.tar');
+    const executablePath = isLocal ? process.env.CHROME_EXECUTABLE_PATH : path.join(__dirname, 'chromium');
 
     const browser = await puppeteer.launch({
         args: isLocal ? puppeteer.defaultArgs() : chromium.args,
