@@ -17,7 +17,8 @@ app.get('/tournaments', async (req, res) => {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
             'Expires': '0'
-        }
+        },
+        cache: 'no-store'
     }); // fetches data
     const html = await data.text(); // converts data into html text
     const $ = cheerio.load(html); // loads html text
@@ -116,7 +117,8 @@ app.get('/tournament/:tournamentId', async (req, res) => {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
             'Expires': '0'
-        }
+        },
+        cache: 'no-store'
     }); // fetches data
     const playersHtml = await playersData.text(); // converts data into html text
     const $p = cheerio.load(playersHtml); // loads html text
@@ -251,7 +253,8 @@ app.get('/usatt/player-lookup/:keyword', async (req, res) => {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
             'Expires': '0'
-        }
+        },
+        cache: 'no-store'
     });
     const html = await data.text();
     const $ = cheerio.load(html);
