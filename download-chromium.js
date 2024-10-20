@@ -32,7 +32,7 @@ const extractTarFile = (filePath, outputDir) => {
 (async () => {
   const chromiumUrl = 'https://omniclonebucket.s3.amazonaws.com/chromium-v130.0.0-pack.tar';
   const tarPath = path.join(__dirname, 'chromium-v130.0.0-pack.tar');
-  const extractPath = path.join(__dirname, 'chromium-v130.0.0-pack.tar');
+  const extractPath = path.join(__dirname, 'chromium.br');
 
   try {
     console.log('Downloading Chromium...');
