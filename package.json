@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run download-chromium",
+    "vercel-build": "npm run download-chromium",
     "download-chromium": "node download-chromium.js",
     "start": "nodemon index.js"
   },
