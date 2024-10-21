@@ -299,7 +299,7 @@ app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
             '--single-process'
         ],
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
+        executablePath: await chromium.executablePath || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
         headless: true,  // Make sure headless mode is enabled
     });
 
