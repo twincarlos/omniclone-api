@@ -300,7 +300,7 @@ app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
         ],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        headless: true,  // Make sure headless mode is enabled
+        headless: true,
     });
 
     const page = await browser.newPage();
