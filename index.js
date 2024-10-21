@@ -1,29 +1,6 @@
 const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer-extra');
-require('puppeteer-extra-plugin-stealth/evasions/chrome.app')
-require('puppeteer-extra-plugin-stealth/evasions/chrome.csi')
-require('puppeteer-extra-plugin-stealth/evasions/chrome.loadTimes')
-require('puppeteer-extra-plugin-stealth/evasions/chrome.runtime')
-require('puppeteer-extra-plugin-stealth/evasions/defaultArgs') // pkg warned me this one was missing
-require('puppeteer-extra-plugin-stealth/evasions/iframe.contentWindow')
-require('puppeteer-extra-plugin-stealth/evasions/media.codecs')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.hardwareConcurrency')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.languages')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.permissions')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.plugins')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.vendor')
-require('puppeteer-extra-plugin-stealth/evasions/navigator.webdriver')
-require('puppeteer-extra-plugin-stealth/evasions/sourceurl')
-require('puppeteer-extra-plugin-stealth/evasions/user-agent-override')
-require('puppeteer-extra-plugin-stealth/evasions/webgl.vendor')
-require('puppeteer-extra-plugin-stealth/evasions/window.outerdimensions')
-require('puppeteer-extra-plugin-user-preferences');
-require('puppeteer-extra-plugin-user-data-dir');
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-const chromium = require('@sparticuz/chromium');
-puppeteer.use(StealthPlugin());
 
 const app = express();
 
@@ -270,8 +247,8 @@ app.get('/tournament/:tournamentId', async (req, res) => {
     };
 });
 
-app.get('/old/usatt/player-lookup/:keyword', async (req, res) => {
-    const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
+app.get('test', async (req, res) => {
+    const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=carlos&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
         headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
@@ -303,58 +280,6 @@ app.get('/old/usatt/player-lookup/:keyword', async (req, res) => {
         players.push(player);
     });
 
-    return res.json(players);
-});
-
-app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
-    // const browser = await puppeteer.launch({
-    //     args: [
-    //         '--no-sandbox',
-    //         '--disable-setuid-sandbox',
-    //         '--disable-gpu',
-    //         '--disable-dev-shm-usage',
-    //         '--no-first-run',
-    //         '--no-zygote',
-    //         '--single-process'
-    //     ],
-    //     defaultViewport: chromium.defaultViewport,
-    //     executablePath: await chromium.executablePath() || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    //     headless: true,
-    // });
-
-    const browser = await puppeteer.launch();
-
-    const page = await browser.newPage();
-
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-    await page.setExtraHTTPHeaders({
-        'accept-language': 'en-US,en;q=0.9',
-        'referer': 'https://usatt.simplycompete.com/',
-    });
-
-    const url = `https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`;
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-
-    await page.waitForSelector('h4.title');
-
-    const players = await page.evaluate(() => {
-        const listItems = document.querySelectorAll("tr.list-item");
-        const playerList = [];
-        listItems.forEach(listItem => {
-            const tds = listItem.querySelectorAll("td.list-column");
-            if (tds[1] && tds[2] && tds[3] && tds[4]) {
-                playerList.push({
-                    url: `https://usatt.simplycompete.com${tds[1].querySelector("a").getAttribute("href")}`,
-                    name: `${tds[1].querySelector("a").textContent} ${tds[2].querySelector("a").textContent}`,
-                    location: tds[3].textContent,
-                    rating: tds[4].textContent
-                })
-            };
-        });
-        return playerList;
-    });
-
-    await browser.close();
     return res.json(players);
 });
 
