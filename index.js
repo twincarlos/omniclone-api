@@ -1,4 +1,3 @@
-require('dotenv').config({ path: '.env.local' });
 const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
