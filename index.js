@@ -4,6 +4,7 @@ const express = require('express');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+const chromium = require('chrome-aws-lambda');
 puppeteer.use(StealthPlugin());
 
 const app = express();
@@ -288,7 +289,21 @@ app.get('/old/usatt/player-lookup/:keyword', async (req, res) => {
 });
 
 app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process'
+        ],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,  // Make sure headless mode is enabled
+    });
+
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
@@ -298,7 +313,7 @@ app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
     });
 
     const url = `https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`;
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
     await page.waitForSelector('h4.title');
 
