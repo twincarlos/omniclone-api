@@ -247,7 +247,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
     };
 });
 
-app.get('test', async (req, res) => {
+app.get('/test', async (req, res) => {
     const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=carlos&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
         headers: {
             'Cache-Control': 'no-cache',
