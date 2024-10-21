@@ -2,6 +2,7 @@ const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer-extra');
+require('puppeteer-extra-plugin-stealth/evasions/chrome.app')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const chromium = require('@sparticuz/chromium');
 puppeteer.use(StealthPlugin());

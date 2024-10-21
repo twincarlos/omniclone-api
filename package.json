@@ -18,8 +18,5 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
-  },
-  "pkg": {
-    "assets": "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
   }
 }
