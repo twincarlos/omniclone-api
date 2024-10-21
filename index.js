@@ -3,7 +3,7 @@ const express = require('express');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-const chromium = require('chrome-aws-lambda');
+const chromium = require('@sparticuz/chromium');
 puppeteer.use(StealthPlugin());
 
 const app = express();
@@ -288,20 +288,22 @@ app.get('/old/usatt/player-lookup/:keyword', async (req, res) => {
 });
 
 app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
-    const browser = await puppeteer.launch({
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-gpu',
-            '--disable-dev-shm-usage',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process'
-        ],
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        headless: true,
-    });
+    // const browser = await puppeteer.launch({
+    //     args: [
+    //         '--no-sandbox',
+    //         '--disable-setuid-sandbox',
+    //         '--disable-gpu',
+    //         '--disable-dev-shm-usage',
+    //         '--no-first-run',
+    //         '--no-zygote',
+    //         '--single-process'
+    //     ],
+    //     defaultViewport: chromium.defaultViewport,
+    //     executablePath: await chromium.executablePath() || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    //     headless: true,
+    // });
+
+    const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
 
