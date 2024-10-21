@@ -2,8 +2,9 @@ require('dotenv').config({ path: '.env.local' });
 const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cheerio = require('cheerio');
-const chromium = require('@sparticuz/chromium');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
 const app = express();
 
@@ -250,7 +251,7 @@ app.get('/tournament/:tournamentId', async (req, res) => {
     };
 });
 
-app.get('/usatt/player-lookup/:keyword', async (req, res) => {
+app.get('/old/usatt/player-lookup/:keyword', async (req, res) => {
     const data = await fetch(`https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`, {
         headers: {
             'Cache-Control': 'no-cache',
@@ -286,27 +287,40 @@ app.get('/usatt/player-lookup/:keyword', async (req, res) => {
     return res.json(players);
 });
 
-app.get('/test', async (req, res) => {
-    const siteUrl = "https://spacejelly.dev";
+app.get('/new/usatt/player-lookup/:keyword', async (req, res) => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
-
-    const browser = await puppeteer.launch({
-        args: isLocal ? puppeteer.defaultArgs() : chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath(),
-        headless: chromium.headless,
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    await page.setExtraHTTPHeaders({
+        'accept-language': 'en-US,en;q=0.9',
+        'referer': 'https://usatt.simplycompete.com/',
     });
 
-    const page = await browser.newPage();
-    await page.goto(siteUrl);
-    const pageTitle = await page.title();
-    await browser.close();
+    const url = `https://usatt.simplycompete.com/userAccount/s2?q=${req.params.keyword}&displayColumns=First+Name&displayColumns=Last+Name&displayColumns=Location&displayColumns=Tournament+Rating&pageSize=1000`;
+    await page.goto(url, { waitUntil: 'networkidle2' });
 
-    return res.json({
-        siteUrl,
-        pageTitle
-    })
+    await page.waitForSelector('h4.title');
+
+    const players = await page.evaluate(() => {
+        const listItems = document.querySelectorAll("tr.list-item");
+        const playerList = [];
+        listItems.forEach(listItem => {
+            const tds = listItem.querySelectorAll("td.list-column");
+            if (tds[1] && tds[2] && tds[3] && tds[4]) {
+                playerList.push({
+                    url: `https://usatt.simplycompete.com${tds[1].querySelector("a").getAttribute("href")}`,
+                    name: `${tds[1].querySelector("a").textContent} ${tds[2].querySelector("a").textContent}`,
+                    location: tds[3].textContent,
+                    rating: tds[4].textContent
+                })
+            };
+        });
+        return playerList;
+    });
+
+    await browser.close();
+    return res.json(players);
 });
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
