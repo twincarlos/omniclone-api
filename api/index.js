@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import FireCrawlApp from '@mendable/firecrawl-js';
-import parse from './parse.js';
+import parse from '../parse.js';
 
 dotenv.config();
 
