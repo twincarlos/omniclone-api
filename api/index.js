@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cheerio from 'cheerio';
 import FireCrawlApp from '@mendable/firecrawl-js';
-import parse from '../parse.js';
+import { parseRating, parsePlayers } from '../parse.js';
 
 dotenv.config();
 
@@ -259,8 +259,19 @@ app.get('/api/usatt/player-lookup/:keyword', async (req, res) => {
         onlyMainContent: true,
         includeTags: ["td"]
     });
-    const parsedText = parse(scrapeResult.markdown);
+    const parsedText = parsePlayers(scrapeResult.markdown);
     return res.json(parsedText);
-})
+});
+
+app.get('/api/usatt/get-rating/:playerId', async (req, res) => {
+    const { playerId } = req.params;
+    const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
+    const firecrawl = new FireCrawlApp({ apiKey: FIRECRAWL_API_KEY });
+    const scrapeResult = await firecrawl.scrapeUrl(`https://usatt.simplycompete.com/userAccount/up/${playerId}`, {
+        formats: ["markdown"],
+        onlyMainContent: true
+    });
+    return res.json(parseRating(scrapeResult.markdown));
+});
 
 app.listen(3000, () => console.log(`Example app listening on port ${3000}`));
