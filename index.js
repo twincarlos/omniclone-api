@@ -259,8 +259,7 @@ app.get('/usatt/player-lookup/:keyword', async (req, res) => {
         onlyMainContent: true,
         includeTags: ["td"]
     });
-    const parsedText = parsePlayers(scrapeResult.markdown);
-    return res.json(parsedText);
+    return res.json(scrapeResult.markdown ? parsePlayers(scrapeResult.markdown) : []);
 });
 
 app.get('/usatt/get-rating/:playerId', async (req, res) => {
