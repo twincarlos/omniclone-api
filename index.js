@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     return res.json("Welcome to Omniclone API!");
 });
 
-app.get('/api/omnipong/tournaments', async (req, res) => {
+app.get('/omnipong/tournaments', async (req, res) => {
     const data = await fetch("https://www.omnipong.com/t-tourney.asp?e=0", {
         headers: {
             'Cache-Control': 'no-cache',
@@ -112,7 +112,7 @@ app.get('/api/omnipong/tournaments', async (req, res) => {
     return res.json(groupedTournaments);
 });
 
-app.get('/api/omnipong/tournament/:tournamentId', async (req, res) => {
+app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
     const { tournamentId } = req.params;
 
     const playersData = await fetch(`https://www.omnipong.com/T-tourney.asp?t=101&r=${tournamentId}`, {
@@ -250,7 +250,7 @@ app.get('/api/omnipong/tournament/:tournamentId', async (req, res) => {
     };
 });
 
-app.get('/api/usatt/player-lookup/:keyword', async (req, res) => {
+app.get('/usatt/player-lookup/:keyword', async (req, res) => {
     const { keyword } = req.params;
     const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
     const firecrawl = new FireCrawlApp({ apiKey: FIRECRAWL_API_KEY });
@@ -263,7 +263,7 @@ app.get('/api/usatt/player-lookup/:keyword', async (req, res) => {
     return res.json(parsedText);
 });
 
-app.get('/api/usatt/get-rating/:playerId', async (req, res) => {
+app.get('/usatt/get-rating/:playerId', async (req, res) => {
     const { playerId } = req.params;
     const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
     const firecrawl = new FireCrawlApp({ apiKey: FIRECRAWL_API_KEY });
