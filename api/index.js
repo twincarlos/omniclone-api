@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express()
 
-app.get('/usatt/player-lookup/:keyword', async (req, res) => {
+app.get('/api/usatt/player-lookup/:keyword', async (req, res) => {
     const { keyword } = req.params;
     const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
     const firecrawl = new FireCrawlApp({ apiKey: FIRECRAWL_API_KEY });
