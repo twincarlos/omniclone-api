@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cheerio from 'cheerio';
 import FireCrawlApp from '@mendable/firecrawl-js';
-import { parseRating, parsePlayers } from '../parse.js';
+import { parseRating, parsePlayers } from './parse.js';
 
 dotenv.config();
 
