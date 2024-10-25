@@ -121,9 +121,9 @@ app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
             'Pragma': 'no-cache',
             'Expires': '0'
         }
-    }); // fetches data
-    const playersHtml = await playersData.text(); // converts data into html text
-    const $p = cheerio.load(playersHtml); // loads html text
+    });
+    const playersHtml = await playersData.text();
+    const $p = cheerio.load(playersHtml);
 
     if ($p("input.omnipong_blue4").length === 0) {
         return res.json({
@@ -160,9 +160,9 @@ app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
                 'Pragma': 'no-cache',
                 'Expires': '0'
             }
-        }); // fetches data
-        const eventsHtml = await eventsData.text(); // converts data into html text
-        const $e = cheerio.load(eventsHtml); // loads html text
+        });
+        const eventsHtml = await eventsData.text();
+        const $e = cheerio.load(eventsHtml);
 
         const events = [];
         $e("center > table").each((index, element) => {
@@ -178,12 +178,12 @@ app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
                             event["date"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[0].trim();
                             event["time"] = eventData1[0].split("Scheduled for: ")[1].trim().split("@")[1].trim() + "M";
                         } else {
-                            const eventData2 = eventData1[0].trim(); // event name
+                            const eventData2 = eventData1[0].trim();
                             const eventData3 = eventData1[1].trim().split("Scheduled for: ");
-                            const eventData4 = eventData3[0].slice(11); // max slots
+                            const eventData4 = eventData3[0].slice(11);
                             const eventData5 = eventData3[1].split("@");
-                            const eventData6 = eventData5[0].trim(); // date
-                            const eventData7 = eventData5[1].trim(); // time
+                            const eventData6 = eventData5[0].trim();
+                            const eventData7 = eventData5[1].trim();
                             event["name"] = eventData2;
                             event["maxSlots"] = Number(eventData4);
                             event["date"] = eventData6;
@@ -215,8 +215,8 @@ app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
                 'Expires': '0'
             }
         });
-        const teamsHTML = await teamsData.text(); // converts data into html text
-        const $t = cheerio.load(teamsHTML); // loads html text
+        const teamsHTML = await teamsData.text();
+        const $t = cheerio.load(teamsHTML);
 
         $t("center h4").each((index, element) => {
             const teamEventName = $t(element).children("p").first().text();
@@ -240,13 +240,12 @@ app.get('/omnipong/tournament/:tournamentId', async (req, res) => {
             });
         });
 
-        // return res.json({
-        //     name: $p("center > h3").text().split("-")[0].trim(),
-        //     players,
-        //     events,
-        //     teamEvents: teamsEvents
-        // });
-        return res.json(events);
+        return res.json({
+            name: $p("center > h3").text().split("-")[0].trim(),
+            players,
+            events,
+            teamEvents: teamsEvents
+        });
     };
 });
 
